@@ -7,7 +7,7 @@ import bcrypt
 if not hasattr(bcrypt, "__about__"):
     class BcryptAbout:
         __version__ = getattr(bcrypt, "__version__", "4.0.0")
-    bcrypt.__about__ = BcryptAbout()
+    setattr(bcrypt, "__about__", BcryptAbout())
 
 from app.core.config import settings
 

@@ -1,5 +1,5 @@
-from datetime import datetime
-from typing import List
+from datetime import datetime, timezone
+from typing import List, Dict, Any
 
 from fastapi import HTTPException, status
 from sqlmodel import Session
@@ -56,7 +56,7 @@ class OrderService:
         try:
             # b) Verificar disponibilidad de stock para TODOS los ítems antes
             #    de realizar cualquier descuento (evita estados parciales).
-            products_cache: dict[int, any] = {}
+            products_cache: Dict[int, Any] = {}
             for item_data in data.items:
                 product = self.product_repo.get_by_id(item_data.product_id)
 
@@ -87,7 +87,7 @@ class OrderService:
             for item_data in data.items:
                 product = products_cache[item_data.product_id]
                 product.stock_actual -= item_data.cantidad
-                product.updated_at = datetime.utcnow()
+                product.updated_at = datetime.now(timezone.utc)
                 self.product_repo.flush_update(product)  # flush sin commit
 
             # d) Crear Order
@@ -99,6 +99,7 @@ class OrderService:
             )
             self.order_repo.add_order(order)
             self.order_repo.flush()  # Obtener order.id del DB
+            assert order.id is not None
 
             # d) Crear OrderItems y calcular total
             for item_data in data.items:
@@ -189,7 +190,7 @@ class OrderService:
         for field, value in update_data.items():
             setattr(order, field, value)
 
-        order.updated_at = datetime.utcnow()
+        order.updated_at = datetime.now(timezone.utc)
         return self.order_repo.update_order(order)
 
     # ------------------------------------------------------------------
@@ -222,11 +223,11 @@ class OrderService:
                 product = self.product_repo.get_by_id(item.product_id)
                 if product:
                     product.stock_actual += item.cantidad
-                    product.updated_at = datetime.utcnow()
+                    product.updated_at = datetime.now(timezone.utc)
                     self.product_repo.flush_update(product)
 
             order.status = OrderStatus.CANCELLED
-            order.updated_at = datetime.utcnow()
+            order.updated_at = datetime.now(timezone.utc)
             self.order_repo.add_order(order)
 
             self.session.commit()

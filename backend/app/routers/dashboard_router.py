@@ -1,9 +1,9 @@
 from typing import Dict, Any
 from datetime import date
 from fastapi import APIRouter, Depends
-from sqlmodel import Session, select
+from sqlmodel import Session, select, col
 from sqlalchemy import func
-from app.routers.deps import get_db, get_current_active_admin
+from app.routers.deps import get_db, get_current_active_admin|
 from app.models.user import User
 from app.models.order import Order, OrderStatus
 from app.models.product import Product
@@ -21,26 +21,26 @@ def get_dashboard_stats(
     current_month = date.today().replace(day=1)
     
     ventas_del_mes = db.exec(
-        select(func.sum(Order.total_amount))
+        select(func.sum(col(Order.total_amount)))
         .where(Order.status != OrderStatus.CANCELLED)
         .where(Order.created_at >= current_month)
     ).first() or 0.0
 
     # Órdenes pendientes
     ordenes_pendientes = db.exec(
-        select(func.count(Order.id))
+        select(func.count(col(Order.id)))
         .where(Order.status == OrderStatus.PENDING)
     ).first() or 0
 
     # Productos en alerta (stock <= stock_minimo)
     productos_en_alerta = db.exec(
-        select(func.count(Product.id))
+        select(func.count(col(Product.id)))
         .where(Product.stock_actual <= Product.stock_minimo)
     ).first() or 0
 
     # Valor total del inventario (sum(precio * stock_actual))
     valor_inventario = db.exec(
-        select(func.sum(Product.precio * Product.stock_actual))
+        select(func.sum(col(Product.precio) * col(Product.stock_actual)))
     ).first() or 0.0
 
     return {

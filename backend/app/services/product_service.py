@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import List, Optional
 
@@ -131,7 +131,7 @@ class ProductService:
         for field, value in update_data.items():
             setattr(product, field, value)
 
-        product.updated_at = datetime.utcnow()
+        product.updated_at = datetime.now(timezone.utc)
         updated = self.repo.update(product)
         return self._enrich(updated)
 

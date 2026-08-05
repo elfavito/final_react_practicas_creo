@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, List, Dict, Any, TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship, Column, JSON
 
@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 
 class Product(SQLModel, table=True):
-    __tablename__ = "product"
+    __tablename__ = "product"  # type: ignore
 
     id: Optional[int] = Field(default=None, primary_key=True)
     sku: str = Field(unique=True, index=True, nullable=False)
@@ -19,7 +19,7 @@ class Product(SQLModel, table=True):
     stock_actual: int = Field(default=0, ge=0)
     stock_minimo: int = Field(default=0, ge=0)
     opciones: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
-    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
-    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
 
     order_items: List["OrderItem"] = Relationship(back_populates="product")
