@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import axiosInstance from '../../../../lib/axiosInstance';
-import { Product, PaginatedResponse } from '../../../../types';
+import axiosInstance from '../../../lib/axiosInstance';
+import { Product, PaginatedResponse } from '../../../types';
 
 export interface UseProductsFilters {
   skip?: number;

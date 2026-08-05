@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../../../store/store';
+import { setCredentials } from '../../slice/authSlice';
 import { Input } from '../../../../components/ui/Input/Input';
 import { Button } from '../../../../components/ui/Button/Button';
 import { Card } from '../../../../components/ui/Card/Card';
+import axiosInstance from '../../../../lib/axiosInstance';
 import styles from './LoginForm.module.css';
 
 export const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // After login, redirect back to the originally requested page (e.g. /checkout)
+  const from = (location.state as any)?.from?.pathname || '/products';
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,16 +27,21 @@ export const LoginForm: React.FC = () => {
     setError('');
 
     try {
-      // Simulate API call for now (auth logic would go here)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      if (email === 'test@test.com' && password === 'password') {
-        // Here you would dispatch login success action
-        navigate('/products');
-      } else {
-        throw new Error('Credenciales inválidas');
-      }
+      // FastAPI OAuth2 expects form-encoded body
+      const formData = new URLSearchParams();
+      formData.append('username', email);
+      formData.append('password', password);
+
+      const response = await axiosInstance.post('/auth/token', formData, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      });
+
+      const { access_token, user } = response.data;
+      dispatch(setCredentials({ token: access_token, user }));
+      navigate(from, { replace: true });
     } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión');
+      const detail = err?.response?.data?.detail;
+      setError(detail || 'Credenciales inválidas. Verifica tu email y contraseña.');
     } finally {
       setLoading(false);
     }
@@ -43,6 +55,7 @@ export const LoginForm: React.FC = () => {
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <Input
+            id="login-email"
             label="Correo Electrónico"
             type="email"
             value={email}
@@ -51,6 +64,7 @@ export const LoginForm: React.FC = () => {
             required
           />
           <Input
+            id="login-password"
             label="Contraseña"
             type="password"
             value={password}

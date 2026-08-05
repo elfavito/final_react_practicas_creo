@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAppDispatch } from '../../../../store/store';
 import { Input } from '../../../../components/ui/Input/Input';
 import { Button } from '../../../../components/ui/Button/Button';
 import { Card } from '../../../../components/ui/Card/Card';
 import styles from './RegisterForm.module.css';
 
 export const RegisterForm: React.FC = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

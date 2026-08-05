@@ -1,32 +1,61 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { LoginPage } from './features/auth/pages/LoginPage/LoginPage';
-import { RegisterPage } from './features/auth/pages/RegisterPage/RegisterPage';
-import { ProductsPage } from './features/products/pages/ProductsPage/ProductsPage';
-import { ProductDetailPage } from './features/products/pages/ProductDetailPage/ProductDetailPage';
+import { BrowserRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { AppRouter } from './routes/AppRouter';
+import { CartWidget } from './features/cart/components/CartWidget/CartWidget';
+import { useAppSelector, useAppDispatch } from './store/store';
+import { logout } from './features/auth/slice/authSlice';
+import './App.css';
 
-export const App = () => {
+const Header: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+
   return (
-    <Router>
+    <header className="app-header">
+      <div className="app-header__inner">
+        <Link to="/products" className="app-header__brand">
+          <span className="app-header__logo">🛍️</span>
+          <span className="app-header__name">ModernStore</span>
+        </Link>
+
+        <nav className="app-header__nav">
+          <Link to="/products" className="app-header__link">Catálogo</Link>
+
+          {isAuthenticated ? (
+            <>
+              <span className="app-header__user">Hola, {user?.full_name?.split(' ')[0] || 'Usuario'}</span>
+              <button
+                className="app-header__btn-ghost"
+                onClick={() => dispatch(logout())}
+              >
+                Salir
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="app-header__link">Iniciar sesión</Link>
+              <Link to="/register" className="app-header__btn-primary">Registrarse</Link>
+            </>
+          )}
+
+          <CartWidget />
+        </nav>
+      </div>
+    </header>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <BrowserRouter>
       <div className="app-container">
-        <header className="app-header">
-          <h1>Modern Store</h1>
-          <nav>
-            <a href="/products">Catálogo</a>
-            <a href="/login">Login</a>
-          </nav>
-        </header>
+        <Header />
         <main className="app-main">
-          <Routes>
-            <Route path="/" element={<Navigate to="/products" replace />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/products/:id" element={<ProductDetailPage />} />
-          </Routes>
+          <AppRouter />
         </main>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 };
 

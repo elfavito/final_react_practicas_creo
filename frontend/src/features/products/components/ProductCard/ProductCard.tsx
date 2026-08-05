@@ -5,6 +5,8 @@ import { Card } from '../../../../components/ui/Card/Card';
 import { Button } from '../../../../components/ui/Button/Button';
 import { StockBadge } from '../StockBadge/StockBadge';
 import { Star } from 'lucide-react';
+import { useAppDispatch } from '../../../../store/store';
+import { addToCart } from '../../../cart/slice/cartSlice';
 import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
@@ -12,14 +14,20 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const dispatch = useAppDispatch();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault(); // Don't navigate to detail page
+    dispatch(addToCart({ product, cantidad: 1 }));
+  };
+
   return (
     <Card hoverable className={styles.card}>
       <Link to={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
         <div className={styles.imageWrapper}>
-          {/* Placeholder image for now */}
-          <img 
-            src={`https://via.placeholder.com/300x200?text=${encodeURIComponent(product.nombre)}`} 
-            alt={product.nombre} 
+          <img
+            src={`https://via.placeholder.com/300x200?text=${encodeURIComponent(product.nombre)}`}
+            alt={product.nombre}
             className={styles.image}
           />
         </div>
@@ -37,10 +45,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
       </Link>
       <Card.Footer>
-        <Button 
-          fullWidth 
-          variant="primary" 
+        <Button
+          fullWidth
+          variant="primary"
           disabled={product.stock_actual === 0}
+          onClick={handleAddToCart}
         >
           {product.stock_actual === 0 ? 'Agotado' : 'Agregar al carrito'}
         </Button>

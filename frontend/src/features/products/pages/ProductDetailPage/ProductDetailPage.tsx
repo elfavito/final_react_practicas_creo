@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useProduct } from '../../hooks/useProducts';
 import { useAppDispatch } from '../../../../store/store';
+import { addToCart } from '../../../cart/slice/cartSlice';
 import { Button } from '../../../../components/ui/Button/Button';
 import { StockBadge } from '../../components/StockBadge/StockBadge';
 import { ArrowLeft, Star, ShoppingCart, Minus, Plus } from 'lucide-react';
@@ -45,8 +46,7 @@ export const ProductDetailPage: React.FC = () => {
   };
 
   const handleAddToCart = () => {
-    // Dispatch add to cart action here
-    console.log('Added to cart', { product, quantity });
+    dispatch(addToCart({ product, cantidad: quantity }));
   };
 
   const isOutOfStock = product.stock_actual === 0;
