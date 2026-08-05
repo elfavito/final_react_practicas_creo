@@ -13,8 +13,13 @@ import { ProductDetailPage } from '../features/products/pages/ProductDetailPage/
 import { CartPage } from '../features/cart/pages/CartPage/CartPage';
 import { CheckoutPage } from '../features/cart/pages/CheckoutPage/CheckoutPage';
 
+// Admin — Dashboard & Inventory
+import { DashboardPage } from '../features/dashboard/pages/DashboardPage/DashboardPage';
+import { InventoryPage } from '../features/inventory/pages/InventoryPage/InventoryPage';
+
 // Guards
 import { ProtectedRoute } from './ProtectedRoute';
+import { UserRole } from '../types';
 
 export const AppRouter: React.FC = () => {
   return (
@@ -27,12 +32,34 @@ export const AppRouter: React.FC = () => {
       <Route path="/products/:id" element={<ProductDetailPage />} />
       <Route path="/cart" element={<CartPage />} />
 
-      {/* Protected routes — require authentication */}
+      {/* Protected routes — require authentication (any role) */}
       <Route
         path="/checkout"
         element={
           <ProtectedRoute>
             <CheckoutPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin routes — require ADMIN role */}
+      <Route
+        path="/admin"
+        element={<Navigate to="/admin/dashboard" replace />}
+      />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <ProtectedRoute requiredRole={UserRole.ADMIN}>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/inventory"
+        element={
+          <ProtectedRoute requiredRole={UserRole.ADMIN}>
+            <InventoryPage />
           </ProtectedRoute>
         }
       />

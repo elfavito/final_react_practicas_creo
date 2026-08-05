@@ -1,0 +1,170 @@
+.alert-table-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.alert-table-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.alert-table__count {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-danger);
+}
+
+.alert-table__wrapper {
+  overflow-x: auto;
+}
+
+.alert-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.alert-table thead th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.alert-table__row {
+  transition: background var(--transition-fast);
+}
+
+.alert-table__row:hover {
+  background: var(--color-surface-hover);
+}
+
+.alert-table__row td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.alert-table__row:last-child td {
+  border-bottom: none;
+}
+
+.alert-table__name {
+  font-weight: 600;
+  color: var(--color-text);
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.alert-table__sku {
+  font-size: 0.75rem;
+  background: var(--color-surface-hover);
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-family: monospace;
+}
+
+.alert-table__categoria {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.alert-table__stock--zero {
+  font-weight: 700;
+  color: var(--color-danger);
+}
+
+.alert-table__stock--low {
+  font-weight: 700;
+  color: var(--color-warning);
+}
+
+.alert-table__minimo {
+  color: var(--color-text-muted);
+}
+
+/* Badge */
+.stock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.badge--danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-danger);
+}
+
+.badge--warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-warning);
+}
+
+.stock-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s infinite;
+}
+
+.stock-badge__pct {
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Empty state */
+.alert-table__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.alert-table__empty-icon {
+  font-size: 2rem;
+}
+
+/* Loading */
+.alert-table__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.alert-table__skeleton-row {
+  height: 3rem;
+  background: linear-gradient(90deg, var(--color-border) 25%, var(--color-surface-hover) 50%, var(--color-border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}

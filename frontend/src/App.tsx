@@ -5,11 +5,13 @@ import { AppRouter } from './routes/AppRouter';
 import { CartWidget } from './features/cart/components/CartWidget/CartWidget';
 import { useAppSelector, useAppDispatch } from './store/store';
 import { logout } from './features/auth/slice/authSlice';
+import { UserRole } from './types';
 import './App.css';
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const isAdmin = user?.role === UserRole.ADMIN;
 
   return (
     <header className="app-header">
@@ -21,6 +23,17 @@ const Header: React.FC = () => {
 
         <nav className="app-header__nav">
           <Link to="/products" className="app-header__link">Catálogo</Link>
+
+          {isAuthenticated && isAdmin && (
+            <>
+              <Link to="/admin/dashboard" className="app-header__link app-header__link--admin">
+                📊 Dashboard
+              </Link>
+              <Link to="/admin/inventory" className="app-header__link app-header__link--admin">
+                📦 Inventario
+              </Link>
+            </>
+          )}
 
           {isAuthenticated ? (
             <>
