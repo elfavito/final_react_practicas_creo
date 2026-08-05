@@ -1,4 +1,5 @@
 import React from 'react';
+import { getProductImage } from '../../utils/imageUtils';
 import { Link } from 'react-router-dom';
 import { Product } from '../../../../types';
 import { Card } from '../../../../components/ui/Card/Card';
@@ -26,7 +27,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <Link to={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
         <div className={styles.imageWrapper}>
           <img
-            src={`https://via.placeholder.com/300x200?text=${encodeURIComponent(product.nombre)}`}
+            src={getProductImage(product.id)}
             alt={product.nombre}
             className={styles.image}
           />

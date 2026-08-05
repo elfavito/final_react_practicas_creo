@@ -3,7 +3,7 @@ from datetime import date
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select, col
 from sqlalchemy import func
-from app.routers.deps import get_db, get_current_active_admin|
+from app.routers.deps import get_db, get_current_active_admin
 from app.models.user import User
 from app.models.order import Order, OrderStatus
 from app.models.product import Product

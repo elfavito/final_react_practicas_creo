@@ -2,7 +2,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from app.routers.deps import get_db, get_current_user
-from app.schemas.product import ProductResponse, ProductUpdate, ProductWithStatus
+from app.schemas.product import ProductUpdate, ProductWithStatus
 from app.models.user import User
 from app.services.product_service import ProductService
 
@@ -13,8 +13,7 @@ def get_products(
     skip: int = 0,
     limit: int = 100,
     categoria: Optional[str] = None,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     product_service = ProductService(db)
     return product_service.get_all(skip=skip, limit=limit, categoria=categoria)
@@ -30,8 +29,7 @@ def get_product_alerts(
 @router.get("/{id}", response_model=ProductWithStatus)
 def get_product(
     id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     product_service = ProductService(db)
     return product_service.get_by_id(id)

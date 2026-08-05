@@ -28,6 +28,14 @@ export const fetchProducts = async (filters: UseProductsFilters): Promise<Pagina
   
   // If the backend returns a direct list, we'll wrap it to simulate pagination, 
   // or return response.data if it matches PaginatedResponse
+  if (Array.isArray(response.data)) {
+    return {
+      items: response.data,
+      total: response.data.length, // Note: For real pagination backend should provide total count
+      page: Math.floor((filters.skip || 0) / (filters.limit || 12)) + 1,
+      size: filters.limit || 12,
+    };
+  }
   return response.data;
 };
 

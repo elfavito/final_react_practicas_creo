@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getProductImage } from '../../utils/imageUtils';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useProduct } from '../../hooks/useProducts';
 import { useAppDispatch } from '../../../../store/store';
@@ -61,7 +62,7 @@ export const ProductDetailPage: React.FC = () => {
       <div className={styles.productLayout}>
         <div className={styles.imageSection}>
           <img 
-            src={`https://via.placeholder.com/600x600?text=${encodeURIComponent(product.nombre)}`} 
+            src={getProductImage(product.id)}
             alt={product.nombre} 
             className={styles.image}
           />

@@ -6,14 +6,14 @@ backend_dir = Path(__file__).resolve().parent.parent
 if str(backend_dir) not in sys.path:
     sys.path.insert(0, str(backend_dir))
 
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import settings
-from app.core.database import init_db
+from contextlib import asynccontextmanager  # noqa: E402
+from fastapi import FastAPI  # noqa: E402
+from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from app.core.config import settings  # noqa: E402
+from app.core.database import init_db  # noqa: E402
 
 
-from app.routers import auth_router, product_router, order_router, dashboard_router
+from app.routers import auth_router, product_router, order_router, dashboard_router  # noqa: E402
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

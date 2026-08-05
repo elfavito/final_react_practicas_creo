@@ -52,7 +52,7 @@ export interface Product {
   stock_actual: number;
   stock_minimo: number;
   opciones: Record<string, unknown>;
-  status?: StockStatus;
+  stock_status?: StockStatus;
   created_at: string;
   updated_at: string;
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { getProductImage } from '../../../products/utils/imageUtils';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { CartItem } from '../../../../types';
 import { useAppDispatch } from '../../../../store/store';
@@ -42,7 +43,7 @@ export const CartTable: React.FC<CartTableProps> = ({ items }) => {
                 <td>
                   <div className={styles.productCell}>
                     <img
-                      src={`https://via.placeholder.com/60x60?text=${encodeURIComponent(item.product.nombre.slice(0, 2))}`}
+                      src={getProductImage(item.product.id)}
                       alt={item.product.nombre}
                       className={styles.productImg}
                     />

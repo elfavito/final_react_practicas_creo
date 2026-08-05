@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Optional, List, TYPE_CHECKING, Any
+from typing import Optional, List, TYPE_CHECKING
 from sqlmodel import SQLModel, Field
 from sqlmodel.main import Relationship
 
