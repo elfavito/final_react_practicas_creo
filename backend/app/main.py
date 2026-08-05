@@ -1,21 +1,38 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
+from app.core.database import init_db
+
+from app.routers import auth_router, product_router, order_router, dashboard_router
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Evento de startup para la BD
+    init_db()
+    yield
+    # Cleanup si es necesario
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    lifespan=lifespan
 )
 
 # Configuración de CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"], # Ajustar en producción a los dominios del frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Inclusión de routers
+app.include_router(auth_router, prefix=settings.API_V1_STR)
+app.include_router(product_router, prefix=settings.API_V1_STR)
+app.include_router(order_router, prefix=settings.API_V1_STR)
+app.include_router(dashboard_router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def read_root():
@@ -24,7 +41,6 @@ def read_root():
         "status": "online",
         "docs": "/docs"
     }
-
 
 @app.get("/health")
 def health_check():
