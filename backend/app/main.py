@@ -1,8 +1,17 @@
+import sys
+from pathlib import Path
+
+# Garantizar que el directorio raíz del backend esté en sys.path para resolver 'app'
+backend_dir = Path(__file__).resolve().parent.parent
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
+
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import init_db
+
 
 from app.routers import auth_router, product_router, order_router, dashboard_router
 

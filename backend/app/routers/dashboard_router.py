@@ -1,7 +1,8 @@
 from typing import Dict, Any
-from datetime import datetime, date
+from datetime import date
 from fastapi import APIRouter, Depends
-from sqlmodel import Session, select, func
+from sqlmodel import Session, select
+from sqlalchemy import func
 from app.routers.deps import get_db, get_current_active_admin
 from app.models.user import User
 from app.models.order import Order, OrderStatus

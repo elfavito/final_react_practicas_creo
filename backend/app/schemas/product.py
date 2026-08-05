@@ -38,3 +38,11 @@ class ProductResponse(ProductBase):
 
     class Config:
         from_attributes = True
+
+
+class ProductWithStatus(ProductResponse):
+    """
+    Respuesta de producto enriquecida con el campo calculado stock_status.
+    Extiende ProductResponse (Pydantic puro, no tabla SQLModel).
+    """
+    stock_status: Optional[str] = None

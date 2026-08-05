@@ -1,0 +1,45 @@
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+build/
+frontend/build/
+.npm/
+.vite/
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.sqlite
+*.sqlite3
+*.db
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Environment / Secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDEs & System
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+pyrightconfig.json
+backend/pyrightconfig.json
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

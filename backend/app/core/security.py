@@ -2,10 +2,18 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional, Union
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+import bcrypt
+# Parche de compatibilidad passlib + bcrypt 4.0+
+if not hasattr(bcrypt, "__about__"):
+    class BcryptAbout:
+        __version__ = getattr(bcrypt, "__version__", "4.0.0")
+    bcrypt.__about__ = BcryptAbout()
+
 from app.core.config import settings
 
 # Contexto de encriptación de contraseñas utilizando Bcrypt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

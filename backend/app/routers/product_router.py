@@ -2,9 +2,9 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from app.routers.deps import get_db, get_current_user
-from app.schemas.product import ProductResponse, ProductUpdate
+from app.schemas.product import ProductResponse, ProductUpdate, ProductWithStatus
 from app.models.user import User
-from app.services.product_service import ProductService, ProductWithStatus
+from app.services.product_service import ProductService
 
 router = APIRouter(prefix="/products", tags=["products"])
 

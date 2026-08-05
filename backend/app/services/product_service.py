@@ -17,16 +17,6 @@ class StockStatus(str, Enum):
     NORMAL = "Normal"         # stock_actual > stock_minimo
 
 
-class ProductWithStatus(Product):
-    """
-    Producto enriquecido con el campo calculado stock_status.
-    No es una tabla — es únicamente un modelo de respuesta de servicio.
-    """
-    stock_status: StockStatus
-
-    class Config:
-        from_attributes = True
-
 
 class ProductService:
     """

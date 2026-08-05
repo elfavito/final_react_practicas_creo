@@ -1,7 +1,8 @@
 from datetime import datetime
 from enum import Enum
 from typing import Optional, List, TYPE_CHECKING
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field
+from sqlmodel.main import Relationship
 
 if TYPE_CHECKING:
     from app.models.order import Order
