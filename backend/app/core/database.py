@@ -15,6 +15,7 @@ def init_db() -> None:
     Crea las tablas en la base de datos basándose en los metadatos de SQLModel.
     Útil para inicializar la base de datos en entornos de desarrollo/pruebas.
     """
+    import app.models  # noqa: F401 - Asegura el registro de todos los modelos SQLModel
     SQLModel.metadata.create_all(engine)
 
 
