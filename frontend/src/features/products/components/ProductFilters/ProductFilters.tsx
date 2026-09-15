@@ -2,7 +2,6 @@ import React from 'react';
 import { Input } from '../../../../components/ui/Input/Input';
 import { Button } from '../../../../components/ui/Button/Button';
 import { Filter } from 'lucide-react';
-import styles from './ProductFilters.module.css';
 import { UseProductsFilters } from '../../hooks/useProducts';
 
 interface ProductFiltersProps {
@@ -20,14 +19,14 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ filters, onFilte
   };
 
   return (
-    <div className={styles.filters}>
-      <h3 className={styles.title}>
-        <Filter size={20} />
+    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-5 flex flex-col gap-6 sticky top-24">
+      <h3 className="flex items-center gap-2 text-lg font-bold text-slate-800 dark:text-slate-100 m-0 pb-3 border-b border-slate-100 dark:border-slate-700">
+        <Filter size={20} className="text-indigo-500" />
         Filtros
       </h3>
 
-      <div className={styles.section}>
-        <h4 className={styles.sectionTitle}>Búsqueda</h4>
+      <div className="flex flex-col gap-2">
+        <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 m-0">Búsqueda</h4>
         <Input 
           placeholder="Buscar productos..." 
           value={filters.search || ''}
@@ -35,8 +34,8 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ filters, onFilte
         />
       </div>
 
-      <div className={styles.section}>
-        <h4 className={styles.sectionTitle}>Categoría</h4>
+      <div className="flex flex-col gap-2">
+        <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 m-0">Categoría</h4>
         <Input 
           placeholder="Ej: Electrónica" 
           value={filters.categoria || ''}
@@ -44,16 +43,16 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ filters, onFilte
         />
       </div>
 
-      <div className={styles.section}>
-        <h4 className={styles.sectionTitle}>Rango de Precio</h4>
-        <div className={styles.priceRange}>
+      <div className="flex flex-col gap-2">
+        <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 m-0">Rango de Precio</h4>
+        <div className="flex items-center gap-2">
           <Input 
             type="number" 
             placeholder="Min" 
             value={filters.min_precio || ''}
             onChange={(e) => handleChange('min_precio', e.target.value ? Number(e.target.value) : undefined)}
           />
-          <span className={styles.priceSeparator}>-</span>
+          <span className="text-slate-400 font-medium">-</span>
           <Input 
             type="number" 
             placeholder="Max" 
@@ -63,8 +62,8 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ filters, onFilte
         </div>
       </div>
 
-      <div className={styles.section}>
-        <h4 className={styles.sectionTitle}>Rating Mínimo</h4>
+      <div className="flex flex-col gap-2">
+        <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 m-0">Rating Mínimo</h4>
         <Input 
           type="number" 
           step="0.1"

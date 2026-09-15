@@ -56,11 +56,11 @@ export const LoginForm: React.FC = () => {
         <form onSubmit={handleSubmit} className={styles.form}>
           <Input
             id="login-email"
-            label="Correo Electrónico"
-            type="email"
+            label="Usuario o Correo Electrónico"
+            type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="ejemplo@correo.com"
+            placeholder="favo o alumno@educart.com"
             required
           />
           <Input

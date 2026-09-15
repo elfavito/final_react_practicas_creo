@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   /* Color Palette - Premium Dark Theme as base but supporting light theme with rich colors */
   --color-primary: #6366f1; /* Indigo 500 */

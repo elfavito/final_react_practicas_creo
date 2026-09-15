@@ -3,8 +3,6 @@ import { useProducts, UseProductsFilters } from '../../hooks/useProducts';
 import { ProductGrid } from '../../components/ProductGrid/ProductGrid';
 import { ProductFilters } from '../../components/ProductFilters/ProductFilters';
 import { Button } from '../../../../components/ui/Button/Button';
-import styles from './ProductsPage.module.css';
-
 export const ProductsPage: React.FC = () => {
   const [filters, setFilters] = useState<UseProductsFilters>({ skip: 0, limit: 12 });
   const { data, isLoading, isError } = useProducts(filters);
@@ -27,20 +25,20 @@ export const ProductsPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Catálogo de Productos</h1>
-        <p className={styles.subtitle}>Descubre nuestra selección de artículos premium</p>
+    <div className="flex flex-col gap-8 pb-16">
+      <header className="flex flex-col gap-2 items-center text-center max-w-2xl mx-auto py-8">
+        <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white m-0 tracking-tight">Catálogo de Productos</h1>
+        <p className="text-lg text-slate-600 dark:text-slate-400 m-0">Descubre nuestra selección de artículos premium</p>
       </header>
 
-      <div className={styles.content}>
-        <aside>
+      <div className="flex flex-col md:flex-row gap-8 items-start relative">
+        <aside className="w-full md:w-64 shrink-0">
           <ProductFilters filters={filters} onFilterChange={setFilters} />
         </aside>
 
-        <main>
+        <main className="flex-1 min-w-0 w-full flex flex-col gap-8">
           {isError ? (
-            <div style={{ color: 'var(--color-danger)', textAlign: 'center', padding: '2rem' }}>
+            <div className="text-red-500 text-center p-8 bg-red-50 dark:bg-red-500/10 rounded-lg border border-red-200 dark:border-red-500/20">
               Error al cargar los productos. Por favor intenta de nuevo.
             </div>
           ) : (
@@ -48,7 +46,7 @@ export const ProductsPage: React.FC = () => {
               <ProductGrid products={products} isLoading={isLoading} />
               
               {!isLoading && total > limit && (
-                <div className={styles.pagination}>
+                <div className="flex items-center justify-between pt-8 border-t border-slate-200 dark:border-slate-800">
                   <Button 
                     variant="secondary" 
                     disabled={skip === 0} 
@@ -56,7 +54,7 @@ export const ProductsPage: React.FC = () => {
                   >
                     Anterior
                   </Button>
-                  <span>
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
                     Página {Math.floor(skip / limit) + 1} de {Math.ceil(total / limit)}
                   </span>
                   <Button 
