@@ -41,9 +41,9 @@ class AuthService:
                 detail=f"El email '{data.email}' ya está registrado.",
             )
 
-        # El primer usuario registrado se convierte en ADMIN
+        # El primer usuario registrado se convierte en ADMIN si no existe ninguno, de lo contrario CLIENT
         all_users = self.repo.get_all(skip=0, limit=1)
-        role = UserRole.ADMIN if not all_users else data.role
+        role = UserRole.ADMIN if not all_users else UserRole.CLIENT
 
         user = User(
             email=data.email,
@@ -58,13 +58,13 @@ class AuthService:
     # Autenticación / Login
     # ------------------------------------------------------------------
 
-    def authenticate(self, email: str, password: str) -> Optional[User]:
+    def authenticate(self, identifier: str, password: str) -> Optional[User]:
         """
-        Verifica las credenciales del usuario.
+        Verifica las credenciales del usuario por email o username (ej. favo).
 
         :returns: El objeto User si las credenciales son válidas, None en caso contrario.
         """
-        user = self.repo.get_by_email(email)
+        user = self.repo.get_by_email_or_username(identifier)
         if not user:
             return None
         if not verify_password(password, user.hashed_password):

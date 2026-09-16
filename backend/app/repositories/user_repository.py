@@ -26,6 +26,14 @@ class UserRepository:
         statement = select(User).where(User.email == email)
         return self.session.exec(statement).first()
 
+    def get_by_email_or_username(self, identifier: str) -> Optional[User]:
+        """Obtiene un usuario por email o por nombre de usuario (ej. 'favo' o 'favo@educart.com')."""
+        statement = select(User).where(
+            (User.email == identifier) | 
+            (User.email == f"{identifier}@educart.com")
+        )
+        return self.session.exec(statement).first()
+
     def get_all(self, skip: int = 0, limit: int = 100) -> List[User]:
         """Obtiene una lista paginada de todos los usuarios."""
         statement = select(User).offset(skip).limit(limit)

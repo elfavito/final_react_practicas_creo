@@ -56,12 +56,26 @@ class ProductService:
         skip: int = 0,
         limit: int = 100,
         categoria: Optional[str] = None,
+        search: Optional[str] = None,
+        min_precio: Optional[float] = None,
+        max_precio: Optional[float] = None,
+        min_rating: Optional[float] = None,
+        sort_by: Optional[str] = None,
     ) -> List[dict]:
         """
         Retorna todos los productos paginados, enriquecidos con stock_status.
-        Permite filtrar por categoría.
+        Permite filtrar por categoría, texto de búsqueda, rango de precios, rating y ordenar.
         """
-        products = self.repo.get_all(skip=skip, limit=limit, categoria=categoria)
+        products = self.repo.get_all(
+            skip=skip,
+            limit=limit,
+            categoria=categoria,
+            search=search,
+            min_precio=min_precio,
+            max_precio=max_precio,
+            min_rating=min_rating,
+            sort_by=sort_by,
+        )
         return [self._enrich(p) for p in products]
 
     def get_by_id(self, product_id: int) -> dict:

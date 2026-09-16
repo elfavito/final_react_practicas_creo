@@ -67,7 +67,7 @@ export const ProductDetailPage: React.FC = () => {
   const hasOptions = Object.keys(opciones).length > 0;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="w-full max-w-6xl mx-auto pb-8">
       <Link
         to="/products"
         className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors mb-8 no-underline"

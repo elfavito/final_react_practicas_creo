@@ -49,26 +49,21 @@
   }
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@layer base {
+  body {
+    font-family: var(--font-family);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-body {
-  font-family: var(--font-family);
-  background-color: var(--color-background);
-  color: var(--color-text);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  a {
+    text-decoration: none;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button, input, select, textarea {
-  font-family: inherit;
+  button, input, select, textarea {
+    font-family: inherit;
+  }
 }

@@ -79,18 +79,20 @@ export const MyOrdersPage: React.FC = () => {
   });
 
   return (
-    <div className="flex flex-col gap-8 pb-16 max-w-5xl mx-auto">
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
-        <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Mis Pedidos
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
-            Historial completo y seguimiento de tus compras en EduCart
-          </p>
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-5xl flex flex-col gap-8 pb-16" style={{ margin: '0 auto' }}>
+        <header className="w-full flex flex-col items-center text-center gap-3 pb-8 border-b border-slate-200 dark:border-slate-800">
+        <div className="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-1 border border-indigo-200/50 dark:border-indigo-700/50 shadow-sm">
+          <Package size={28} />
         </div>
-        <Link to="/products">
-          <Button variant="secondary" className="flex items-center gap-2">
+        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight text-center">
+          Mis Pedidos
+        </h1>
+        <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base text-center max-w-md leading-relaxed">
+          Historial completo y seguimiento en tiempo real de tus compras en EduCart
+        </p>
+        <Link to="/products" className="mt-2">
+          <Button variant="secondary" className="flex items-center gap-2 font-bold shadow-sm">
             <ShoppingBag size={16} />
             Continuar comprando
           </Button>
@@ -98,36 +100,38 @@ export const MyOrdersPage: React.FC = () => {
       </header>
 
       {isLoading ? (
-        <div className="flex flex-col gap-4">
+        <div className="w-full flex flex-col gap-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-44 bg-slate-100 dark:bg-slate-800 rounded-2xl animate-pulse" />
           ))}
         </div>
       ) : isError ? (
-        <div className="p-8 text-center bg-rose-50 dark:bg-rose-900/20 text-rose-600 rounded-xl border border-rose-200 dark:border-rose-800">
+        <div className="w-full p-8 text-center bg-rose-50 dark:bg-rose-900/20 text-rose-600 rounded-xl border border-rose-200 dark:border-rose-800">
           <p className="font-semibold">Error al cargar tu historial de pedidos.</p>
           <Button onClick={() => refetch()} className="mt-4">
             Reintentar
           </Button>
         </div>
       ) : orders.length === 0 ? (
-        <div className="text-center py-20 px-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-500">
+        <div className="w-full text-center py-20 px-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col items-center gap-4">
+          <div className="w-16 h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-500">
             <Package size={32} />
           </div>
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white">Aún no tienes pedidos registrados</h3>
-          <p className="text-slate-500 dark:text-slate-400 max-w-md text-sm">
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white text-center">
+            Aún no tienes pedidos registrados
+          </h3>
+          <p className="text-slate-500 dark:text-slate-400 max-w-md text-sm sm:text-base text-center leading-relaxed">
             Tus compras y descargas académicas aparecerán aquí para que puedas seguir su estado en todo momento.
           </p>
-          <Link to="/products">
-            <Button className="mt-2 font-semibold">
+          <Link to="/products" className="mt-2">
+            <Button className="font-bold px-6 py-3 shadow-md">
               Explorar Catálogo de Productos
               <ArrowRight size={16} className="ml-2" />
             </Button>
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col gap-6">
+        <div className="w-full flex flex-col gap-6">
           {orders.map((order) => (
             <div
               key={order.id}
@@ -200,6 +204,7 @@ export const MyOrdersPage: React.FC = () => {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 };

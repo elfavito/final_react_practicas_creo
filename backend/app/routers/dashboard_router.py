@@ -1,51 +1,40 @@
-from typing import Dict, Any
-from datetime import date
+from typing import Dict, Any, List
 from fastapi import APIRouter, Depends
-from sqlmodel import Session, select, col
-from sqlalchemy import func
+from sqlmodel import Session
+
 from app.routers.deps import get_db, get_current_active_admin
 from app.models.user import User
-from app.models.order import Order, OrderStatus
-from app.models.product import Product
+from app.services.dashboard_service import DashboardService
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 
-@router.get("/stats")
+
+@router.get("/stats", response_model=Dict[str, Any])
 def get_dashboard_stats(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_admin)
 ) -> Dict[str, Any]:
-    # Ventas del mes (suma de total_amount de ordenes completadas/pagadas)
-    # Asumimos que podemos sumar las que no estan canceladas o las que estan completadas.
-    # Por ahora sumamos PENDING o COMPLETED (si existiera). Asumimos todo lo no CANCELLED.
-    current_month = date.today().replace(day=1)
-    
-    ventas_del_mes = db.exec(
-        select(func.sum(col(Order.total_amount)))
-        .where(Order.status != OrderStatus.CANCELLED)
-        .where(Order.created_at >= current_month)
-    ).first() or 0.0
+    """Retorna los KPIs principales del negocio para administradores."""
+    service = DashboardService(db)
+    return service.get_stats()
 
-    # Órdenes pendientes
-    ordenes_pendientes = db.exec(
-        select(func.count(col(Order.id)))
-        .where(Order.status == OrderStatus.PENDING)
-    ).first() or 0
 
-    # Productos en alerta (stock <= stock_minimo)
-    productos_en_alerta = db.exec(
-        select(func.count(col(Product.id)))
-        .where(Product.stock_actual <= Product.stock_minimo)
-    ).first() or 0
+@router.get("/top-products", response_model=List[Dict[str, Any]])
+def get_top_products(
+    limit: int = 5,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_admin)
+) -> List[Dict[str, Any]]:
+    """Retorna los productos más vendidos para el gráfico de barras del Dashboard."""
+    service = DashboardService(db)
+    return service.get_top_products(limit=limit)
 
-    # Valor total del inventario (sum(precio * stock_actual))
-    valor_inventario = db.exec(
-        select(func.sum(col(Product.precio) * col(Product.stock_actual)))
-    ).first() or 0.0
 
-    return {
-        "ventas_del_mes": float(ventas_del_mes),
-        "ordenes_pendientes": int(ordenes_pendientes),
-        "productos_en_alerta": int(productos_en_alerta),
-        "valor_total_inventario": float(valor_inventario)
-    }
+@router.get("/category-distribution", response_model=List[Dict[str, Any]])
+def get_category_distribution(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_admin)
+) -> List[Dict[str, Any]]:
+    """Retorna la distribución de productos por categoría para el gráfico de torta."""
+    service = DashboardService(db)
+    return service.get_category_distribution()

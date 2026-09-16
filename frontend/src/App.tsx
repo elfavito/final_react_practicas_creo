@@ -14,7 +14,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors duration-300">
-      <div className="w-full max-w-[1720px] mx-auto px-4 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
+      <div className="w-full max-w-[1720px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 no-underline text-slate-900 dark:text-white transition-opacity hover:opacity-90">
           <span className="text-2xl">🎓</span>
           <div className="flex flex-col">
@@ -108,7 +108,7 @@ const Header: React.FC = () => {
 const Footer: React.FC = () => {
   return (
     <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 transition-colors duration-300 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="w-full max-w-[1720px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex flex-col items-center md:items-start gap-2 text-center md:text-left">
           <div className="flex items-center gap-2">
             <span className="text-2xl">🎓</span>
@@ -142,7 +142,7 @@ export const App: React.FC = () => {
     <BrowserRouter>
       <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
         <Header />
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-8">
+        <main className="flex-1 w-full max-w-[1720px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 py-8" style={{ margin: '0 auto' }}>
           <AppRouter />
         </main>
         <Footer />

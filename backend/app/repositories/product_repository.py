@@ -1,5 +1,5 @@
 from typing import Optional, List
-from sqlmodel import Session, select
+from sqlmodel import Session, select, col
 
 from app.models.product import Product
 
@@ -31,14 +31,42 @@ class ProductRepository:
         skip: int = 0,
         limit: int = 100,
         categoria: Optional[str] = None,
+        search: Optional[str] = None,
+        min_precio: Optional[float] = None,
+        max_precio: Optional[float] = None,
+        min_rating: Optional[float] = None,
+        sort_by: Optional[str] = None,
     ) -> List[Product]:
         """
-        Obtiene una lista paginada de productos.
-        Permite filtrar opcionalmente por categoría.
+        Obtiene una lista paginada de productos con soporte para filtros avanzados y ordenamiento.
         """
         statement = select(Product)
         if categoria:
             statement = statement.where(Product.categoria == categoria)
+        if search:
+            search_pattern = f"%{search}%"
+            statement = statement.where(
+                (col(Product.nombre).ilike(search_pattern)) |
+                (col(Product.descripcion).ilike(search_pattern))
+            )
+        if min_precio is not None:
+            statement = statement.where(Product.precio >= min_precio)
+        if max_precio is not None:
+            statement = statement.where(Product.precio <= max_precio)
+        if min_rating is not None:
+            statement = statement.where(Product.rating >= min_rating)
+
+        if sort_by == "precio_asc":
+            statement = statement.order_by(col(Product.precio).asc())
+        elif sort_by == "precio_desc":
+            statement = statement.order_by(col(Product.precio).desc())
+        elif sort_by == "rating":
+            statement = statement.order_by(col(Product.rating).desc())
+        elif sort_by == "nombre":
+            statement = statement.order_by(col(Product.nombre).asc())
+        else:
+            statement = statement.order_by(col(Product.id).asc())
+
         statement = statement.offset(skip).limit(limit)
         return list(self.session.exec(statement).all())
 

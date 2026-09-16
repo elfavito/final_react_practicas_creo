@@ -2,12 +2,13 @@ from typing import Generator
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session
+from app.core.config import settings
 from app.core.database import engine
 from app.core.security import decode_access_token
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
 
 def get_db() -> Generator[Session, None, None]:
     with Session(engine) as session:

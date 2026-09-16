@@ -9,6 +9,7 @@ if str(backend_dir) not in sys.path:
 from app.services.auth_service import AuthService  # noqa: E402
 from app.services.product_service import ProductService  # noqa: E402
 from app.services.order_service import OrderService  # noqa: E402
+from app.services.dashboard_service import DashboardService  # noqa: E402
 
-__all__ = ["AuthService", "ProductService", "OrderService"]
+__all__ = ["AuthService", "ProductService", "OrderService", "DashboardService"]
 

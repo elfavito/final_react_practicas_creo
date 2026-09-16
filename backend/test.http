@@ -1,0 +1,133 @@
+### EduCart API — Colección de Pruebas HTTP (Desafío Final 2025)
+@baseUrl = http://localhost:8000/api/v1
+
+### 1. Health Check
+GET http://localhost:8000/health
+
+### 2. Login con Administrador (favo / Favo1010)
+# @name loginAdmin
+POST {{baseUrl}}/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username = favo
+&password = Favo1010
+
+### Guardar Token de Administrador
+@adminToken = {{loginAdmin.response.body.access_token}}
+
+### 3. Login con Usuario Estudiante (alumno@educart.com / Alumno1010)
+# @name loginStudent
+POST {{baseUrl}}/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username = alumno@educart.com
+&password = Alumno1010
+
+### Guardar Token de Estudiante
+@studentToken = {{loginStudent.response.body.access_token}}
+
+### 4. Obtener Perfil del Usuario Actual (/auth/me)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{adminToken}}
+
+### 5. Catálogo de Productos — Listar Todos
+GET {{baseUrl}}/products
+
+### 6. Catálogo de Productos — Filtro por Categoría
+GET {{baseUrl}}/products?categoria=Tech%20Tools
+
+### 7. Catálogo de Productos — Búsqueda por Texto (ej: "Tablet")
+GET {{baseUrl}}/products?search=Tablet
+
+### 8. Catálogo de Productos — Rango de Precio y Rating
+GET {{baseUrl}}/products?min_precio=20&max_precio=100&min_rating=4.5
+
+### 9. Detalle de Producto por ID (ej: Producto 1)
+GET {{baseUrl}}/products/1
+
+### 10. Crear Nuevo Producto (Requiere ADMIN)
+POST {{baseUrl}}/products
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "sku": "NEW-PROD-99",
+  "nombre": "Teclado Mecánico Educativo RGB",
+  "descripcion": "Teclado ergonómico silencioso óptimo para programación.",
+  "precio": 45.00,
+  "categoria": "Tech Tools",
+  "rating": 4.9,
+  "stock_actual": 10,
+  "stock_minimo": 3,
+  "opciones": {
+    "switch": ["Rojo", "Marrón"]
+  }
+}
+
+### 11. Actualizar Stock y Precio (Inline Edit / Modal - Requiere ADMIN)
+PATCH {{baseUrl}}/products/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "precio": 199.99,
+  "stock_actual": 15
+}
+
+### 12. Checkout Atómico — Compra Exitosa (Descuenta stock)
+POST {{baseUrl}}/orders
+Content-Type: application/json
+Authorization: Bearer {{studentToken}}
+
+{
+  "shipping_address": "Calle Falsa 123, Aula 4B - Alumno EduCart",
+  "items": [
+    {
+      "product_id": 1,
+      "cantidad": 1,
+      "precio_unitario": 189.99
+    },
+    {
+      "product_id": 2,
+      "cantidad": 2,
+      "precio_unitario": 39.50
+    }
+  ]
+}
+
+### 13. Checkout Atómico — Falla por Stock Insuficiente (Rollback 400)
+# Intentar comprar más unidades del producto agotado o más de las disponibles
+POST {{baseUrl}}/orders
+Content-Type: application/json
+Authorization: Bearer {{studentToken}}
+
+{
+  "shipping_address": "Dirección de prueba",
+  "items": [
+    {
+      "product_id": 10,
+      "cantidad": 5,
+      "precio_unitario": 35.00
+    }
+  ]
+}
+
+### 14. Historial de Órdenes del Usuario Autenticado (/orders/my-orders)
+GET {{baseUrl}}/orders/my-orders
+Authorization: Bearer {{studentToken}}
+
+### 15. Dashboard — KPIs del Negocio en Tiempo Real (Requiere ADMIN)
+GET {{baseUrl}}/dashboard/stats
+Authorization: Bearer {{adminToken}}
+
+### 16. Dashboard — Top 5 Productos Más Vendidos (Gráfico de Barras - Requiere ADMIN)
+GET {{baseUrl}}/dashboard/top-products
+Authorization: Bearer {{adminToken}}
+
+### 17. Dashboard — Distribución por Categoría (Gráfico de Torta - Requiere ADMIN)
+GET {{baseUrl}}/dashboard/category-distribution
+Authorization: Bearer {{adminToken}}
+
+### 18. Dashboard / Inventario — Alertas de Stock Bajo (Requiere ADMIN)
+GET {{baseUrl}}/products/alerts
+Authorization: Bearer {{adminToken}}
