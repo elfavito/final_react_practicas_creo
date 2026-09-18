@@ -29,7 +29,7 @@ export const LoginForm: React.FC = () => {
     try {
       // FastAPI OAuth2 expects form-encoded body
       const formData = new URLSearchParams();
-      formData.append('username', email);
+      formData.append('username', email.trim().toLowerCase());
       formData.append('password', password);
 
       const response = await axiosInstance.post('/auth/token', formData, {
