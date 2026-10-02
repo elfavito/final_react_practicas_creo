@@ -23,3 +23,4 @@ class Product(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
 
     order_items: List["OrderItem"] = Relationship(back_populates="product")
+    #util para relacionar a nivel codigo (pemrmite acceder a los items de una orden mediante producto.order_items)

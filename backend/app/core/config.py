@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "EduCart API"
     API_V1_STR: str = "/api/v1"
 
-    # Configuración de Base de Datos (PostgreSQL o MariaDB)
+    # Configuración de Base de Datos (PostgreSQL 15)
     DB_URL: str = "postgresql://educart_user:educart_password@localhost:5432/educart_db"
 
     # Configuración de Seguridad y JWT

@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura y Ciclo de Vida del Backend (EduCart)",
+    "subtitle": "FastAPI, Inyección de Dependencias, Servicios en Capas y PostgreSQL 15",
+    "output": "backend-flow.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "ciclo-peticion",
+        "label": "1. Ciclo de Vida de Petición",
+        "focus": ["http_request", "entry_main", "routers_layer", "services_layer", "repositories_layer", "postgres_database"],
+        "note": "La petición entra por main.py, pasa por routers, ejecuta reglas de negocio en services y persiste con repositories en PostgreSQL."
+      },
+      {
+        "id": "seguridad-inyeccion",
+        "label": "2. Seguridad e Inyección de Dependencias",
+        "focus": ["entry_main", "deps_injection", "auth_security", "routers_layer", "schemas_validation"],
+        "note": "deps.py provee la sesión de DB y valida tokens JWT antes de autorizar las rutas."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "http_request",
+      "type": "external",
+      "label": "Cliente HTTP",
+      "sublabel": "Frontend / Postman",
+      "pos": [40, 280],
+      "size": [140, 60],
+      "tag": "Bearer Token"
+    },
+    {
+      "id": "entry_main",
+      "type": "backend",
+      "label": "FastAPI & CORS",
+      "sublabel": "main.py (lifespan)",
+      "pos": [240, 280],
+      "size": [150, 60],
+      "brand": "fastapi",
+      "tag": "Puerto 8000"
+    },
+    {
+      "id": "auth_security",
+      "type": "security",
+      "label": "Seguridad & Tokens",
+      "sublabel": "core/security.py",
+      "pos": [40, 140],
+      "size": [140, 60],
+      "tag": "JWT & Bcrypt"
+    },
+    {
+      "id": "deps_injection",
+      "type": "backend",
+      "label": "Inyector Dependencias",
+      "sublabel": "routers/deps.py",
+      "pos": [240, 140],
+      "size": [150, 60],
+      "tag": "Session & Auth"
+    },
+    {
+      "id": "routers_layer",
+      "type": "backend",
+      "label": "Capa Enrutadores",
+      "sublabel": "routers/*_router.py",
+      "pos": [450, 280],
+      "size": [150, 60],
+      "tag": "HTTP Endpoints"
+    },
+    {
+      "id": "schemas_validation",
+      "type": "backend",
+      "label": "Esquemas y DTOs",
+      "sublabel": "schemas/*.py",
+      "pos": [450, 140],
+      "size": [150, 60],
+      "tag": "Pydantic Models"
+    },
+    {
+      "id": "services_layer",
+      "type": "backend",
+      "label": "Capa de Servicios",
+      "sublabel": "services/*_service.py",
+      "pos": [660, 280],
+      "size": [150, 60],
+      "tag": "Lógica Negocio"
+    },
+    {
+      "id": "models_orm",
+      "type": "backend",
+      "label": "Modelos SQLModel",
+      "sublabel": "models/*.py",
+      "pos": [870, 140],
+      "size": [150, 60],
+      "brand": "python",
+      "tag": "Entidades ORM"
+    },
+    {
+      "id": "repositories_layer",
+      "type": "backend",
+      "label": "Repositorios DB",
+      "sublabel": "repositories/*_repo.py",
+      "pos": [870, 280],
+      "size": [150, 60],
+      "tag": "Aislamiento DB"
+    },
+    {
+      "id": "postgres_database",
+      "type": "database",
+      "label": "Base de Datos",
+      "sublabel": "PostgreSQL 15 (Docker)",
+      "pos": [1080, 280],
+      "size": [140, 60],
+      "brand": "postgresql",
+      "tag": "Puerto 5432"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Servidor HTTP y Entrada",
+      "wraps": ["entry_main", "routers_layer"]
+    },
+    {
+      "kind": "region",
+      "label": "Transversal (Seguridad, Inyección y DTOs)",
+      "wraps": ["auth_security", "deps_injection", "schemas_validation"]
+    },
+    {
+      "kind": "region",
+      "label": "Capa de Dominio Puro",
+      "wraps": ["services_layer"]
+    },
+    {
+      "kind": "region",
+      "label": "Persistencia de Datos",
+      "wraps": ["models_orm", "repositories_layer", "postgres_database"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "http-a-main",
+      "from": "http_request",
+      "to": "entry_main",
+      "label": "HTTP"
+    },
+    {
+      "id": "main-a-deps",
+      "from": "entry_main",
+      "to": "deps_injection",
+      "label": "inyección",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDy": -24
+    },
+    {
+      "id": "deps-a-auth",
+      "from": "deps_injection",
+      "to": "auth_security",
+      "label": "valida JWT",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "main-a-routers",
+      "from": "entry_main",
+      "to": "routers_layer",
+      "label": "despacha"
+    },
+    {
+      "id": "routers-a-schemas",
+      "from": "routers_layer",
+      "to": "schemas_validation",
+      "label": "valida DTO",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDy": -24
+    },
+    {
+      "id": "routers-a-services",
+      "from": "routers_layer",
+      "to": "services_layer",
+      "label": "ejecuta"
+    },
+    {
+      "id": "services-a-repos",
+      "from": "services_layer",
+      "to": "repositories_layer",
+      "label": "consulta"
+    },
+    {
+      "id": "models-a-repos",
+      "from": "models_orm",
+      "to": "repositories_layer",
+      "label": "entidades",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "repos-a-db",
+      "from": "repositories_layer",
+      "to": "postgres_database",
+      "label": "SQL",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Arquitectura en Capas Limpia (Layered Clean Architecture)",
+      "items": [
+        "Routers desacoplados: sólo gestionan transporte HTTP, status codes y validación de esquemas",
+        "Services independientes: concentran transacciones atómicas (ej: verificación y descuento de stock)",
+        "Repositories dedicados: aíslan completamente las consultas SQLModel y la sesión de base de datos"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Inyección de Dependencias y Seguridad Robusta",
+      "items": [
+        "deps.py maneja el ciclo de vida de la sesión (Session(engine)) y verificación OAuth2PasswordBearer",
+        "Tokens JWT (HS256) con expiración y contraseñas cifradas mediante hashing seguro Bcrypt"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Persistencia Relacional Real en Docker",
+      "items": [
+        "Base de datos PostgreSQL 15 ejecutándose en contenedor Docker oficial",
+        "Modelos SQLModel que unifican tipos Pydantic y mapeo relacional SQLAlchemy sin duplicar esquemas"
+      ]
+    }
+  ]
+}

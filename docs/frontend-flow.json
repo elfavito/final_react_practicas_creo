@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura y Flujo del Frontend (EduCart)",
+    "subtitle": "React 19, TypeScript, Vite, Redux Toolkit y TanStack Query",
+    "output": "frontend-flow.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "recorrido-usuario",
+        "label": "1. Entrada y Enrutamiento Protegido",
+        "focus": ["entry_point", "routing_guards", "client_state", "domain_features"],
+        "note": "El usuario accede; se verifica la sesión en Redux y ProtectedRoute decide el acceso."
+      },
+      {
+        "id": "flujo-datos",
+        "label": "2. Petición de Datos y Backend",
+        "focus": ["domain_features", "server_state", "http_client", "backend_api"],
+        "note": "Los hooks consultan TanStack Query, que usa Axios con inyección de JWT para consultar la API."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "entry_point",
+      "type": "frontend",
+      "label": "Punto de Entrada",
+      "sublabel": "main.tsx / App.tsx",
+      "pos": [40, 280],
+      "size": [150, 60],
+      "brand": "react",
+      "tag": "Providers"
+    },
+    {
+      "id": "client_state",
+      "type": "frontend",
+      "label": "Estado Global",
+      "sublabel": "Redux + Persist",
+      "pos": [260, 140],
+      "size": [150, 60],
+      "tag": "auth & cart"
+    },
+    {
+      "id": "routing_guards",
+      "type": "security",
+      "label": "Rutas y Guards",
+      "sublabel": "AppRouter / Guard",
+      "pos": [260, 280],
+      "size": [150, 60],
+      "tag": "ProtectedRoute"
+    },
+    {
+      "id": "ui_components",
+      "type": "frontend",
+      "label": "Componentes UI",
+      "sublabel": "components/ui/*",
+      "pos": [480, 140],
+      "size": [150, 60],
+      "tag": "Botón, Card, etc"
+    },
+    {
+      "id": "domain_features",
+      "type": "frontend",
+      "label": "Módulos de Dominio",
+      "sublabel": "features/* (auth, cart)",
+      "pos": [480, 280],
+      "size": [150, 60],
+      "tag": "Screaming Arch"
+    },
+    {
+      "id": "server_state",
+      "type": "frontend",
+      "label": "Gestión Asíncrona",
+      "sublabel": "TanStack Query v5",
+      "pos": [700, 280],
+      "size": [150, 60],
+      "tag": "useProducts"
+    },
+    {
+      "id": "http_client",
+      "type": "frontend",
+      "label": "Cliente HTTP",
+      "sublabel": "axiosInstance.ts",
+      "pos": [920, 280],
+      "size": [150, 60],
+      "brand": "typescript",
+      "tag": "Interceptor JWT"
+    },
+    {
+      "id": "backend_api",
+      "type": "backend",
+      "label": "API REST Backend",
+      "sublabel": "FastAPI (/api/v1)",
+      "pos": [1140, 280],
+      "size": [150, 60],
+      "brand": "fastapi",
+      "tag": "Puerto 8000"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Entrada y Seguridad de Navegación",
+      "wraps": ["entry_point", "client_state", "routing_guards"]
+    },
+    {
+      "kind": "region",
+      "label": "Capa de Presentación y Dominio",
+      "wraps": ["ui_components", "domain_features"]
+    },
+    {
+      "kind": "region",
+      "label": "Capa de Red y Consumo de Datos",
+      "wraps": ["server_state", "http_client"]
+    },
+    {
+      "kind": "region",
+      "label": "Servicio Externo",
+      "wraps": ["backend_api"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "entry-a-guards",
+      "from": "entry_point",
+      "to": "routing_guards",
+      "label": "renderiza"
+    },
+    {
+      "id": "state-a-guards",
+      "from": "client_state",
+      "to": "routing_guards",
+      "label": "valida auth",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "guards-a-features",
+      "from": "routing_guards",
+      "to": "domain_features",
+      "label": "autoriza"
+    },
+    {
+      "id": "features-a-ui",
+      "from": "domain_features",
+      "to": "ui_components",
+      "label": "compone",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "features-a-query",
+      "from": "domain_features",
+      "to": "server_state",
+      "label": "hooks"
+    },
+    {
+      "id": "query-a-axios",
+      "from": "server_state",
+      "to": "http_client",
+      "label": "petición"
+    },
+    {
+      "id": "axios-a-backend",
+      "from": "http_client",
+      "to": "backend_api",
+      "label": "JSON REST",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Arquitectura Basada en Características (Screaming)",
+      "items": [
+        "Organización modular en 'features/' por contexto de negocio (auth, cart, products, inventory)",
+        "Componentes visuales desacoplados en 'components/ui/' que siguen Atomic Design"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Estrategia Dual de Estado",
+      "items": [
+        "Redux Toolkit + Redux Persist para sesión, token y carrito (sincronizados con localStorage)",
+        "TanStack Query para caché del servidor, deduplicación y refetching inteligente en segundo plano"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Seguridad y Comunicación HTTP",
+      "items": [
+        "ProtectedRoute intercepta y redirige usuarios sin autenticar o sin rol de administrador",
+        "Axios inyecta automáticamente el token Bearer en los encabezados de cada solicitud"
+      ]
+    }
+  ]
+}

@@ -36,11 +36,19 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ filters, onFilte
 
       <div className="flex flex-col gap-2">
         <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 m-0">Categoría</h4>
-        <Input 
-          placeholder="Ej: Electrónica" 
+        <select 
           value={filters.categoria || ''}
-          onChange={(e) => handleChange('categoria', e.target.value)}
-        />
+          onChange={(e) => handleChange('categoria', e.target.value || undefined)}
+          className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-200 transition-colors cursor-pointer"
+        >
+          <option value="">Todas las categorías</option>
+          <option value="Tech Tools">Tech Tools</option>
+          <option value="Study Materials">Study Materials</option>
+          <option value="Robotics & Hardware">Robotics & Hardware</option>
+          {filters.categoria && !['Tech Tools', 'Study Materials', 'Robotics & Hardware'].includes(filters.categoria) && (
+            <option value={filters.categoria}>{filters.categoria}</option>
+          )}
+        </select>
       </div>
 
       <div className="flex flex-col gap-2">

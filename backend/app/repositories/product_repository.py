@@ -42,7 +42,7 @@ class ProductRepository:
         """
         statement = select(Product)
         if categoria:
-            statement = statement.where(Product.categoria == categoria)
+            statement = statement.where(col(Product.categoria).ilike(f"%{categoria}%"))
         if search:
             search_pattern = f"%{search}%"
             statement = statement.where(

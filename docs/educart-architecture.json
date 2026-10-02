@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura EduCart (Plataforma Full-Stack)",
+    "subtitle": "FastAPI, SQLModel, PostgreSQL 15 y React",
+    "output": "educart-architecture.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "flujo-completo",
+        "label": "Flujo de Solicitud Completo",
+        "focus": ["cliente_react", "enrutadores_fastapi", "servicios_negocio", "repositorios_datos", "postgresql_db"],
+        "note": "Petición del usuario atravesando la arquitectura en capas hasta la base de datos PostgreSQL."
+      },
+      {
+        "id": "autenticacion-estado",
+        "label": "Autenticación y Estado",
+        "focus": ["cliente_react", "gestion_estado", "enrutadores_fastapi", "modulo_seguridad"],
+        "note": "Flujo de autenticación OAuth2 con tokens Bearer JWT y sincronización de estado global en el cliente."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "cliente_react",
+      "type": "frontend",
+      "label": "Frontend React",
+      "sublabel": "Vite + React + TS",
+      "pos": [40, 280],
+      "size": [140, 60],
+      "tag": "SPA Web"
+    },
+    {
+      "id": "gestion_estado",
+      "type": "frontend",
+      "label": "Gestión de Estado",
+      "sublabel": "Redux + TanStack",
+      "pos": [40, 140],
+      "size": [140, 60]
+    },
+    {
+      "id": "modulo_seguridad",
+      "type": "security",
+      "label": "Módulo Seguridad",
+      "sublabel": "OAuth2 / JWT",
+      "pos": [260, 140],
+      "size": [150, 60],
+      "tag": "Tokens JWT"
+    },
+    {
+      "id": "enrutadores_fastapi",
+      "type": "backend",
+      "label": "Enrutadores API",
+      "sublabel": "FastAPI REST API",
+      "pos": [260, 280],
+      "size": [150, 60]
+    },
+    {
+      "id": "servicios_negocio",
+      "type": "backend",
+      "label": "Servicios Negocio",
+      "sublabel": "Lógica y Stock",
+      "pos": [490, 280],
+      "size": [150, 60]
+    },
+    {
+      "id": "repositorios_datos",
+      "type": "backend",
+      "label": "Repositorios DB",
+      "sublabel": "Consultas SQLModel",
+      "pos": [720, 280],
+      "size": [150, 60]
+    },
+    {
+      "id": "postgresql_db",
+      "type": "database",
+      "label": "Base de Datos",
+      "sublabel": "PostgreSQL 15",
+      "pos": [940, 280],
+      "size": [140, 60]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Capa de Cliente (Navegador)",
+      "wraps": ["cliente_react", "gestion_estado"]
+    },
+    {
+      "kind": "region",
+      "label": "Backend Modular (FastAPI en Capas)",
+      "wraps": ["enrutadores_fastapi", "modulo_seguridad", "servicios_negocio", "repositorios_datos"]
+    },
+    {
+      "kind": "region",
+      "label": "Capa de Persistencia",
+      "wraps": ["postgresql_db"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "ui-a-estado",
+      "from": "cliente_react",
+      "to": "gestion_estado",
+      "label": "acciones",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "cliente-a-api",
+      "from": "cliente_react",
+      "to": "enrutadores_fastapi",
+      "label": "REST",
+      "variant": "emphasis"
+    },
+    {
+      "id": "api-a-seguridad",
+      "from": "enrutadores_fastapi",
+      "to": "modulo_seguridad",
+      "label": "token",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "api-a-servicio",
+      "from": "enrutadores_fastapi",
+      "to": "servicios_negocio",
+      "label": "despachar"
+    },
+    {
+      "id": "servicio-a-repo",
+      "from": "servicios_negocio",
+      "to": "repositorios_datos",
+      "label": "CRUD"
+    },
+    {
+      "id": "repo-a-db",
+      "from": "repositorios_datos",
+      "to": "postgresql_db",
+      "label": "SQL"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Frontend (Screaming Architecture)",
+      "items": [
+        "Módulos por dominio: auth, products, cart, checkout, dashboard",
+        "Redux Toolkit para el carrito de compras y sesión de usuario",
+        "TanStack Query para caché del servidor y TanStack Table para admin"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Backend (Layered Architecture)",
+      "items": [
+        "Routers: Recepción HTTP, validación de DTOs y respuestas de estado",
+        "Services: Reglas de negocio puras, órdenes y control atómico de stock",
+        "Repositories: Consultas SQLModel y aislamiento de base de datos"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Seguridad y Persistencia Real",
+      "items": [
+        "Seguridad: Flujo OAuth2 Password con Hashing Bcrypt y Bearer JWT",
+        "Persistencia: Contenedor PostgreSQL 15 oficial con volúmenes en Docker"
+      ]
+    }
+  ]
+}
